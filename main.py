@@ -1,16 +1,15 @@
 import tkinter as tk
-import datetime
 from random import randrange, getrandbits, randint
 
 root = tk.Tk()
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
-root.geometry("{0}x{1}".format(1480, 500))
+root.geometry("{0}x{1}".format(1280, 500))
 
-root.title("Woo-Lam_Suprun-Anna")
+root.title("Woo-Lam-Kulik")
 
-root.configure(background='#e3aab4')
+root.configure(background='#59606e')
 
 
 xx = 150
@@ -120,13 +119,12 @@ bobRandomValueinAlice = None
 sessionKeyAliceValue = tk.StringVar() 
 sessionKeyAlice = None
 addBobRandomValueinAliceButton = None
-___ = None
 
 tryAgainButton = None
 ##################RSA######################
 
 #Test if a number is prime
-def is_prime(n, k=256):
+def is_prime(n, k=128):
     
     #n the number to test
     #k the number of tests to do
@@ -166,12 +164,12 @@ def generate_prime_candidate(length):
     p |= (1 << length - 1) | 1
     return p
 # Generate a prime
-def generate_prime_number(length=128):
+def generate_prime_number(length=64):
     # length - the length of the number to generate, in bits
 
     p = 4
     # keep generating while the primality test fail
-    while not is_prime(p, 256):
+    while not is_prime(p, 128):
         p = generate_prime_candidate(length)
     return p
 
@@ -246,9 +244,9 @@ def createButton(t, cmd, h=1, w=5, f=('calibri', 12, 'bold')):
     return tk.Button(
         root,
         font=f,
-        bg='#852c3b',
+        bg='#e33333',
         fg="white",
-        activebackground='#217560',
+        activebackground='green',
         activeforeground='white',
         highlightthickness=0,
         text=t,
@@ -265,7 +263,7 @@ def makeLabel(t, f = ('calibri', 12, 'bold'), w = 17, h=None ):
         fg="white",
         width=w,
         height=h,
-        bg='#852c3b',
+        bg='#687182',
         highlightthickness=0,
         borderwidth='1')
 
@@ -274,8 +272,8 @@ def makeEntry(v, w=None):
         root, 
         width=w,
         font=('calibri', 12, 'bold'),
-        fg="black",
-        bg='white',
+        fg="white",
+        bg='#687182',
         highlightthickness=0,
         textvariable=v)
 
@@ -299,8 +297,8 @@ def generateAliceKey():
     alicePublicKeyinTrent = alicePublicKey
     print("adsfasdf", alicePublicKeyinBob, alicePublicKeyinTrent)
 
-    alicePublicKeyinTrentText = makeLabel("Alice Public key").place(relx=0.5, y=40+29*2, x=-110, anchor=tk.N)
-    alicePublicKeyinTrentLable = makeEntry(alicePublicKeyinTrentValue).place(relx=0.5, y=40+29*2, x=xx+6-110, anchor=tk.N)
+    alicePublicKeyinTrentText = makeLabel("Alice Public key").place(relx=0.5, y=-(40+29*5)-10+31+29*2, x=-154, rely=1, anchor=tk.W)
+    alicePublicKeyinTrentLable = makeEntry(alicePublicKeyinTrentValue).place(relx=0.5, y=-(40+29*5)-10+31+29*2, x=xx-5-154, rely=1, anchor=tk.W)
 
     alicePublicKeyValue.set(alicePublicKey)
     alicePrivateKeyValue.set(alicePrivateKey)
@@ -326,8 +324,8 @@ def generateBobKey():
     # bobPublicKeyinAlice = bobPublicKey
     bobPublicKeyinTrent = bobPublicKey
 
-    bobPublicKeyinTrentText = makeLabel("Bob's Public key").place(relx=0.5, y=40+29*3, x=-110, anchor=tk.N)
-    bobPublicKeyinTrentLable = makeEntry(bobPublicKeyinTrentValue).place(relx=0.5, y=40+29*3, x=xx+6-110, anchor=tk.N)
+    bobPublicKeyinTrentText = makeLabel("Bob's Public key").place(relx=0.5, y=-(40+29*5)-10+31+29*3, x=-154, rely=1, anchor=tk.W)
+    bobPublicKeyinTrentLable = makeEntry(bobPublicKeyinTrentValue).place(relx=0.5, y=-(40+29*5)-10+31+29*3, x=xx-5-154, rely=1, anchor=tk.W)
 
     bobPublicKeyValue.set(bobPublicKey)
     bobPrivateKeyValue.set(bobPrivateKey)
@@ -355,8 +353,6 @@ def generateTrentKey():
     trentPublicKeyinAlice = trentPublicKey
     trentPublicKeyinBob = trentPublicKey
 
-
-
     trentPublicKeyinAliceText = makeLabel("Trent Public key").place(x=5, y=40+29*2)
     trentPublicKeyinAliceLable = makeEntry(trentPublicKeyinAliceValue).place(x=xx, y=40+29*2)
     trentPublicKeyinBobText = makeLabel("Trent Public key").place(relx=1, y=40+29*2, x=-5, rely=0, anchor=tk.NE)
@@ -380,8 +376,7 @@ def trentSecondStepSignClick():
     print(encryptedSign)
     trentSendValue.set((encryptedSign, bobPublicKeyinTrent))
     trentSendToAlice = (encryptedSign, bobPublicKeyinTrent)
-
-    trentSendButton['text'] = 'Send'
+    trentSendButton['text'] = '-> Alice'
     trentSendButton['command'] = trentSecondStepSendClick
     print(decrypt(encryptedSign, trentPublicKey))
 
@@ -404,7 +399,7 @@ def aliceThirdStepVerifyClick():
 
 def aliceThirdStepCryptClick():
     global aliceSendToBob
-    aliceSendButton['text'] = "Send"
+    aliceSendButton['text'] = "-> Bob"
     aliceSendButton['command'] = aliceThirdStepSendClick
 
     aliceSendToBob = encrypt(aliceRandomValue, bobPublicKeyinAlice)
@@ -417,12 +412,10 @@ def bobFourthStepDecryptClick():
     global aliceRandomValueinBobValue
 
     aliceRandomValueinBob = decrypt(aliceSendToBob, bobPrivateKey)
-
-    aliceRandomValueinBobText = makeLabel("Alice Time value").place(relx=1, y=40+29*4, x=-5, rely=0, anchor=tk.NE)
+    aliceRandomValueinBobText = makeLabel("Alice Random value").place(relx=1, y=40+29*4, x=-5, rely=0, anchor=tk.NE)
     aliceRandomValueinBobLable = makeEntry(aliceRandomValueinBobValue).place(relx=1, y=40+29*4, x=-xx, rely=0, anchor=tk.NE)
-    aliceRandomValueinBobValue.set(datetime.datetime(int(str(aliceRandomValueinBob)[0:4]), int(str(aliceRandomValueinBob)[4:6]), int(str(aliceRandomValueinBob)[6:8]), int(str(aliceRandomValueinBob)[8:10]), int(str(aliceRandomValueinBob)[10:12]), int(str(aliceRandomValueinBob)[12:14])))
-
-    bobSendValue.set(datetime.datetime(int(str(aliceRandomValueinBob)[0:4]), int(str(aliceRandomValueinBob)[4:6]), int(str(aliceRandomValueinBob)[6:8]), int(str(aliceRandomValueinBob)[8:10]), int(str(aliceRandomValueinBob)[10:12]), int(str(aliceRandomValueinBob)[12:14])))
+    aliceRandomValueinBobValue.set(aliceRandomValueinBob)
+    bobSendValue.set(aliceRandomValueinBob)
     bobSendButton['text'] = "Crypt Trent's PubKey"
     bobSendButton['command'] = bobFourthStepCryptClick
 
@@ -431,7 +424,7 @@ def bobFourthStepCryptClick():
 
     bobSendToTrent = encrypt(aliceRandomValueinBob, trentPublicKeyinBob)
     bobSendValue.set(str(bobSendToTrent)+", Alice, Bob")
-    bobSendButton['text'] = "Send"
+    bobSendButton['text'] = "Trent <- "
     bobSendButton['command'] = bobFourthStepSendClick
 
 def bobFourthStepSendClick(): fifthStep()
@@ -446,16 +439,12 @@ def trentFifthStepDecryptClick():
 
     aliceRandomValueinTrent = encrypt(bobSendToTrent, trentPrivateKey)
 
-    # trentPrivateKeyText = makeLabel("Trent's Private key").place(relx=0.5, y=40+29*4, x=-110, anchor=tk.N)
-    # trentPrivateKeyLable = makeEntry(trentPrivateKeyValue).place(relx=0.5, y=40+29*4, x=xx+6-110, anchor=tk.N)
-
-
-    aliceRandomValueinTrentText = makeLabel("Alice Time value").place(relx=0.5, y=40+29*4, x=-110, anchor=tk.N)
-    aliceRandomValueinTrentLable = makeEntry(aliceRandomValueinTrentValue).place(relx=0.5, y=40+29*4, x=xx+6-110, anchor=tk.N)
-    aliceRandomValueinTrentValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
+    aliceRandomValueinTrentText = makeLabel("Alice Random value").place(relx=0.5, y=-(40+29*5)-10+31+29*4, x=-154, rely=1, anchor=tk.W)
+    aliceRandomValueinTrentLable = makeEntry(aliceRandomValueinTrentValue).place(relx=0.5, y=-(40+29*5)-10+31+29*4, x=xx-5-154, rely=1, anchor=tk.W)
+    aliceRandomValueinTrentValue.set(aliceRandomValueinTrent)
 
     addAlicePublicKeyinTrentButton = createButton("Add to send", addAlicePublicKeyinTrentButtonClick, None, None)
-    addAlicePublicKeyinTrentButton.place(relx=0.5, y=40+29*2, x=xx-5-110+140, anchor=tk.N)
+    addAlicePublicKeyinTrentButton.place(relx=0.5, y=-(40+29*5)-10+31+29*2, x=xx-5-154+170, rely=1, anchor=tk.W)
 
 def trentFifthStepFirstSignClick():
     global trentSendToBob
@@ -467,7 +456,7 @@ def trentFifthStepFirstSignClick():
     print(encryptedSign)
     trentSendToBob[0] = (encryptedSign, alicePublicKeyinTrent)
     trentSendValue.set(trentSendToBob[0])
-    trentSendButton['text'] = 'Send'
+    trentSendButton['text'] = '-> Bob'
     trentSendButton['command'] = trentFifthStepFirstSendClick
     print(decrypt(encryptedSign, trentPublicKey))
 
@@ -478,10 +467,10 @@ def trentFifthStepFirstSendClick():
     trentSendValue.set("")
     trentSendButton.place_forget()
 
-    sessionKey = makeLabel("Session Key").place(relx=0.5, y=40+29*5, x=-110, anchor=tk.N)
-    sessionKeyLable = makeEntry(sessionKeyinTrentValue).place(relx=0.5, y=40+29*5, x=xx+6-110, anchor=tk.N)
+    sessionKey = makeLabel("Session Key").place(relx=0.5, y=-(40+29*5)-10+31+29*5, x=-154, rely=1, anchor=tk.W) 
+    sessionKeyLable = makeEntry(sessionKeyinTrentValue).place(relx=0.5, y=-(40+29*5)-10+31+29*5, x=xx-5-154, rely=1, anchor=tk.W)
     addSessioninTrentButton = createButton("Gen", genSessioninTrentButtonClick, None, None)
-    addSessioninTrentButton.place(relx=0.5, y=40+29*5, x=xx+6-110+130, anchor=tk.N)
+    addSessioninTrentButton.place(relx=0.5, y=-(40+29*5)-10+31+29*5, x=xx-5-154+170, rely=1, anchor=tk.W)
 
 def trentFifthStepSecondSignClick():
     encryptedSignSession = encrypt(abs(hash(sessionKeyinTrent)), trentPrivateKey)
@@ -489,7 +478,7 @@ def trentFifthStepSecondSignClick():
     trentSendToBob[1] = (encryptedSignSession, encryptedSignRandom)
     trentSendValue.set(trentSendToBob[1])
 
-    trentSendButton.place(relx=0.5, y=5, x=-110+350, anchor=tk.N)
+
     trentSendButton['text'] = "Crypt with Bob's PubKey"
     trentSendButton['command'] = trentFifthStepCryptClick
     print(decrypt(encryptedSignSession, trentPublicKey), decrypt(encryptedSignRandom, trentPublicKey))
@@ -501,8 +490,8 @@ def trentFifthStepCryptClick():
     trentSendToBob = (trentSendToBob[0], ((encryptBobSes, trentSendToBob[1][0]), (encryptBobRand, trentSendToBob[1][1])))
     trentSendValue.set(trentSendToBob[1])
 
-    trentSendButton.place(relx=0.5, y=5, x=-110+280, anchor=tk.N)
-    trentSendButton['text'] = "Send"
+
+    trentSendButton['text'] = "-> Bob"
     trentSendButton['command'] = trentFifthStepSendClick
 
 def trentFifthStepSendClick(): sixthStep()
@@ -520,7 +509,6 @@ def bobsixthStepVerifyClick():
     if selfSignAlicePublicKey == decryptedSignAlicePublicKey: 
         print("Verification successful")
         bobSendValue.set("Verification successful")
-
         alicePublicKeyinBobText = makeLabel("Alice Public key").place(relx=1, y=40+29*3, x=-5, rely=0, anchor=tk.NE)
         alicePublicKeyinBobLable = makeEntry(alicePublicKeyinBobValue).place(relx=1, y=40+29*3, x=-xx, rely=0, anchor=tk.NE)
         alicePublicKeyinBob = trentSendToBob[0][1]
@@ -536,7 +524,6 @@ def bobsixthStepVerifyClick():
     if selfSignSessionKey == decryptedSignSessionKey: 
         print("Verification successful")
         bobSendValue.set("Verification successful")
-
         sessionKeyBob1 = makeLabel("Session Key").place(relx=1, y=40+29*6, x=-5, rely=0, anchor=tk.NE)
         sessionKeyBobLable = makeEntry(sessionKeyBobValue).place(relx=1, y=40+29*6, x=-xx, rely=0, anchor=tk.NE)
         sessionKeyBob = decryptSessionKey
@@ -557,10 +544,10 @@ def bobseventhStepVerifyClick():
     global addBobRandomValueinAliceButton
 
 
-    bobRandomValueinAliceText = makeLabel("Bob Time value").place(x=5, y=40+29*5)
+    bobRandomValueinAliceText = makeLabel("Bob Random value").place(x=5, y=40+29*5)
     bobRandomValueinAliceLable = makeEntry(bobRandomValueinAliceValue).place(x=xx, y=40+29*5)
     bobRandomValueinAlice = bobSendToAlice[0]
-    bobRandomValueinAliceValue.set(datetime.datetime(int(str(bobRandomValueinAlice)[0:4]), int(str(bobRandomValueinAlice)[4:6]), int(str(bobRandomValueinAlice)[6:8]), int(str(bobRandomValueinAlice)[8:10]), int(str(bobRandomValueinAlice)[10:12]), int(str(bobRandomValueinAlice)[12:14])))
+    bobRandomValueinAliceValue.set(bobRandomValueinAlice)
 
 
     decryptSessionKey = decrypt(bobSendToAlice[1][0][0], alicePrivateKey)
@@ -570,7 +557,6 @@ def bobseventhStepVerifyClick():
     if selfSignSessionKey == decryptedSignSessionKey: 
         print("Verification successful")
         aliceSendValue.set("Verification successful")
-
         sessionKeyAlice = makeLabel("Session Key").place(x=5, y=40+29*6)
         sessionKeyAliceLable = makeEntry(sessionKeyAliceValue).place(x=xx, y=40+29*6)
 
@@ -590,7 +576,7 @@ def aliceSeventhStepCryptClick():
 
     aliceSendToBob = bobRandomValueinAlice * sessionKeyAlice
     aliceSendValue.set(int(aliceSendToBob))
-    aliceSendButton['text'] = "Send"
+    aliceSendButton['text'] = "-> Bob"
     aliceSendButton['command'] = aliceSendToBobFinal
 
 def aliceSendToBobFinal(): finalStep()
@@ -598,18 +584,17 @@ def aliceSendToBobFinal(): finalStep()
 def bobFinalStepDecryptClick():
     global tryAgainButton
 
-    zxc = aliceSendToBob/sessionKeyBob
-    bobSendValue.set(datetime.datetime(int(str(zxc)[0:4]), int(str(zxc)[4:6]), int(str(zxc)[6:8]), int(str(zxc)[8:10]), int(str(zxc)[10:12]), int(str(zxc)[12:14])))
+    bobSendValue.set(int(aliceSendToBob/sessionKeyBob))
     bobSendButton.place_forget()
     whatToDo['text'] =  "Автентифікація прошла успішно!"
 
     tryAgainButton = createButton("Try Again", tryAgain, None, None)
-    tryAgainButton.place(relx=0.5, x = -30, rely = 0.9)
+    tryAgainButton.place(relx=0.5, x = -30, y=0)
 
 
 def addBobRandomValueinAliceButtonClick():
     addBobRandomValueinAliceButton.place_forget()
-    aliceSendValue.set(datetime.datetime(int(str(bobRandomValueinAlice)[0:4]), int(str(bobRandomValueinAlice)[4:6]), int(str(bobRandomValueinAlice)[6:8]), int(str(bobRandomValueinAlice)[8:10]), int(str(bobRandomValueinAlice)[10:12]), int(str(bobRandomValueinAlice)[12:14])))
+    aliceSendValue.set(bobRandomValueinAlice)
 
     aliceSendButton['text'] = "Crypt with Session's key"
     aliceSendButton['command'] = aliceSeventhStepCryptClick
@@ -619,15 +604,15 @@ def addBobRandomValueinAliceButtonClick():
 def genAliceRandomValueClick():
     global aliceRandomValue
 
-    aliceRandomValue = int(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
-    aliceRandomValueValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
+    aliceRandomValue = randrange(2**32, 2**33)
+    aliceRandomValueValue.set(aliceRandomValue)
 
     addAliceRandomValueButton['text'] = "Add to send"
     addAliceRandomValueButton['command'] = addAliceRandomValueClick
 
 def addAliceRandomValueClick():
     addAliceRandomValueButton.place_forget()
-    aliceSendValue.set("{Alice, "+str(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))+"}")
+    aliceSendValue.set("{Alice, "+str(aliceRandomValue)+"}")
 
     aliceSendButton['text'] = "Crypt Bob's key"
     aliceSendButton['command'] = aliceThirdStepCryptClick
@@ -638,9 +623,9 @@ def addBobPublicKeyinTrentButtonClick():
     global trentSendValue
 
     addBobPublicKeyinTrentButton.place_forget()
-    trentSendLable = makeEntry(trentSendValue, 29).place(relx=0.5, y=9, x=-110+121, anchor=tk.N)
+    trentSendLable = makeEntry(trentSendValue, 29).place(relx=0.5, y=-(40+29*5)-10-1, x=-154+74, rely=1, anchor=tk.W)
     trentSendButton = createButton("Sign", trentSecondStepSignClick, None, None, ('calibri', 14, 'bold'))
-    trentSendButton.place(relx=0.5, y=5, x=-110+280, anchor=tk.N)
+    trentSendButton.place(relx=0.5, y=-(40+29*5)-10+1, x=-154+315, rely=1, anchor=tk.W)
     trentSendValue.set(bobPublicKeyinTrent)
 
 def addAlicePublicKeyinTrentButtonClick():
@@ -648,7 +633,7 @@ def addAlicePublicKeyinTrentButtonClick():
 
     trentSendButton['text'] = "Sign"
     trentSendButton['command'] = trentFifthStepFirstSignClick
-    trentSendButton.place(relx=0.5, y=5, x=-110+280, anchor=tk.N)
+    trentSendButton.place(relx=0.5, y=-(40+29*5)-10+1, x=-154+315, rely=1, anchor=tk.W)
     trentSendValue.set(alicePublicKeyinTrent)
 
 def genSessioninTrentButtonClick():
@@ -665,8 +650,7 @@ def addSessioninTrentButtonClick():
     addSessioninTrentButton.place_forget()
     trentSendValue.set(sessionKeyinTrent)
     addAliceRandomValueinTrentButton = createButton("Add to send", addAliceRandomValueinTrentButtonClick, None, None)
-    addAliceRandomValueinTrentButton.place(relx=0.5, y=40+29*4, x=xx+6-110+130, anchor=tk.N)
-
+    addAliceRandomValueinTrentButton.place(relx=0.5, y=-(40+29*5)-10+31+29*4, x=xx-5-154+170, rely=1, anchor=tk.W)
 
 def addAliceRandomValueinTrentButtonClick():
     addAliceRandomValueinTrentButton.place_forget()
@@ -674,7 +658,7 @@ def addAliceRandomValueinTrentButtonClick():
 
     trentSendButton['text'] = "Sign"
     trentSendButton['command'] = trentFifthStepSecondSignClick
-    trentSendButton.place(relx=0.5, y=5, x=-110+280, anchor=tk.N)
+    trentSendButton.place(relx=0.5, y=-(40+29*5)-10+1, x=-154+315, rely=1, anchor=tk.W)
 
 def addTrentSecondMessage():
     global bobSendToAlice
@@ -687,7 +671,7 @@ def addTrentSecondMessage():
 
     bobSendButton.place_forget()
 
-    bobRandomValueText = makeLabel("Bob Time value").place(relx=1, y=40+29*5, x=-5, rely=0, anchor=tk.NE) 
+    bobRandomValueText = makeLabel("Bob's Random value").place(relx=1, y=40+29*5, x=-5, rely=0, anchor=tk.NE) 
     bobRandomValueLable = makeEntry(bobRandomValueValue).place(relx=1, y=40+29*5, x=-xx, rely=0, anchor=tk.NE)
 
     addBobRandomValueButton = createButton("Gen", genBobRandomValueClick, None, None)
@@ -699,10 +683,8 @@ def genBobRandomValueClick():
 
     addBobRandomValueButton['text'] = "Add to send"
     addBobRandomValueButton['command'] = addBobRandomValueClick
-
-    bobRandomValue = int(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
-    bobRandomValueValue.set(datetime.datetime(int(str(bobRandomValue)[0:4]), int(str(bobRandomValue)[4:6]), int(str(bobRandomValue)[6:8]), int(str(bobRandomValue)[8:10]), int(str(bobRandomValue)[10:12]), int(str(bobRandomValue)[12:14])))
-
+    bobRandomValue = randrange(2**32, 2**33)
+    bobRandomValueValue.set(bobRandomValue)
 
 def addBobRandomValueClick():
     global bobSendToAlice
@@ -711,7 +693,7 @@ def addBobRandomValueClick():
     bobSendToAlice = (bobRandomValue, bobSendToAlice)
     bobSendValue.set(bobSendToAlice)
 
-    bobSendButton['text'] = "Send"
+    bobSendButton['text'] = "Alice <-"
     bobSendButton['command'] = bobSixthStepSendClick
     bobSendButton.place(relx=1, y=5-1, x=-5-315, rely=0, anchor=tk.NE)
 
@@ -719,9 +701,6 @@ def addBobRandomValueClick():
 
 # PROGRAM ENTRY
 def startGen():
-
-
-
     global generateAliceKeyButton
     global generateBobKeyButton
     global generateTrentKeyButton
@@ -747,23 +726,21 @@ def startGen():
     generateBobKeyButton.place(relx=1, y=40+4, x=-xx-xb, rely=0, anchor=tk.NE)
 
 
-    trent = makeLabel("ID:Trent", ('calibri', 16, 'bold'), 6).place(relx=0.5, y=5, x=-110-35, anchor=tk.N)
-    trentPublicKeyText = makeLabel("Trent's Public key").place(relx=0.5, y=40, x=-110, anchor=tk.N)
-    trentPublicKeyLable = makeEntry(trentPublicKeyValue).place(relx=0.5, y=40, x=xx+6-110, anchor=tk.N)
+    trent = makeLabel("ID:Trent", ('calibri', 16, 'bold'), 6).place(relx=0.5, y=-(40+29*5)-10, x=-154, rely=1, anchor=tk.W)
+    trentPublicKeyText = makeLabel("Trent's Public key").place(relx=0.5, y=-(40+29*5)-10+31, x=-154, rely=1, anchor=tk.W)
+    trentPublicKeyLable = makeEntry(trentPublicKeyValue).place(relx=0.5, y=-(40+29*5)-10+31, x=xx-5-154, rely=1, anchor=tk.W)
     generateTrentKeyButton = createButton("Gen", generateTrentKey, 2)
-    generateTrentKeyButton.place(relx=0.5, x=-164+xx+xb, y=40+4, anchor=tk.N)
+    generateTrentKeyButton.place(relx=0.5, y=-(40+29*5)+31+4, x=xx-5-154 + xb, rely=1, anchor=tk.W)
 
-    trentPrivateKeyText = makeLabel("Trent's Private key").place(relx=0.5, y=40+29, x=-110, anchor=tk.N)
-    trentPrivateKeyLable = makeEntry(trentPrivateKeyValue).place(relx=0.5, y=40+29, x=xx+6-110, anchor=tk.N)
+    trentPrivateKeyText = makeLabel("Trent's Private key").place(relx=0.5, y=-(40+29*5)-10+31+29, x=-154, rely=1, anchor=tk.W)
+    trentPrivateKeyLable = makeEntry(trentPrivateKeyValue).place(relx=0.5, y=-(40+29*5)-10+31+29, x=xx-5-154, rely=1, anchor=tk.W)
 
-    whatToDo = makeLabel("Крок 0", ('calibri', 14, 'bold'))
-    whatToDo.place(relx=0.5, y=140, x=-50, rely=0.6, anchor=tk.W)
-
+    whatToDo = makeLabel("ЕТАП №0\n\nГенерація відкритих та закритих ключів\nкожною стороною", ('calibri', 14, 'bold'), 40, 8)
+    whatToDo.place(relx=0.5, y=140, x=-200, rely=0, anchor=tk.W)
 
 def firstStep():
     global aliceSendValue
     global aliceSendButton
-    global ___
 
     alicePublicKeyValue.set(alicePublicKey)
     alicePrivateKeyValue.set(alicePrivateKey)
@@ -779,27 +756,16 @@ def firstStep():
     trentPublicKeyinBobValue.set(trentPublicKey)
 
 
-    whatToDo['text'] = "Крок 1"
+    whatToDo['text'] = "ЕТАП №1\n\nАліса відправляє Тренту повідомлення:\n Свій ідентифікатор та Боба"
 
     aliceSendLable = makeEntry(aliceSendValue, 29).place(x=5+74, y=5+3)
-    aliceSendButton = createButton("Send", aliceFirstStepSendClick, None, None, ('calibri', 14, 'bold'))
+    aliceSendButton = createButton("-> Trent", aliceFirstStepSendClick, None, None, ('calibri', 14, 'bold'))
     aliceSendButton.place(x=5+315, y=5-1)
     aliceSendValue.set("{Alice, Bob}")
-
-    ___ = tk.Label(
-        root, 
-        text="------------------------------------->",
-        font=('calibri', 14, 'bold'),
-        fg="white",
-        bg='#852c3b',
-        highlightthickness=0,
-        borderwidth='1')
-    ___.place(y=240, x=320)
     
    
 def secondStep():
     global addBobPublicKeyinTrentButton
-    global ___
 
     aliceSendButton.place_forget()
     aliceSendValue.set("")
@@ -817,19 +783,16 @@ def secondStep():
     trentPublicKeyinAliceValue.set(trentPublicKey)
     trentPublicKeyinBobValue.set(trentPublicKey)  
 
-    whatToDo['text'] = "Крок 2"
-    ___['text'] = "<-------------------------------------"
-    ___.place(y=240, x=320)
-   
+    whatToDo['text'] = "ЕТАП №2\n\nТрент відправляє Алісі відкритий ключ Боба\nПідписавши його своїм закритим ключем"
+
 
     addBobPublicKeyinTrentButton = createButton("Add to send", addBobPublicKeyinTrentButtonClick, None, None)
-    addBobPublicKeyinTrentButton.place(relx=0.5, y=40+29*3, x=xx+6-110+130, anchor=tk.N)
+    addBobPublicKeyinTrentButton.place(relx=0.5, y=-(40+29*5)-10+31+29*3, x=xx-5-154+170, rely=1, anchor=tk.W)
 
 def thirdStep():
     global bobPublicKeyinAliceValue
     global bobPublicKeyinAlice
     global aliceRandomValueValue
-    global ___
 
     trentSendButton.place_forget()
     aliceSendValue.set(trentSendToAlice)
@@ -848,7 +811,7 @@ def thirdStep():
     trentPublicKeyinAliceValue.set(trentPublicKey)
     trentPublicKeyinBobValue.set(trentPublicKey)
 
-    whatToDo['text'] = "Крок 3"
+    whatToDo['text'] = "ЕТАП №3\n\nАліса перевіряє підпис, після чого відсилає Бобу\nСвій ідентифікатор і деяке випадкове число\nЗашифрувавши його відкритим ключем Боба"
 
     bobPublicKeyinAlice = trentSendToAlice[1]
     bobPublicKeyinAliceText = makeLabel("Bob's Public key").place(x=5, y=40+29*3)
@@ -859,16 +822,12 @@ def thirdStep():
     aliceSendButton['command'] = aliceThirdStepVerifyClick
     aliceSendButton.place(x=5+315, y=5-1)
 
-    aliceRandomValueText = makeLabel("Alice Time value").place(x=5, y=40+29*4)
+    aliceRandomValueText = makeLabel("Alice Random value").place(x=5, y=40+29*4)
     aliceRandomValueLable = makeEntry(aliceRandomValueValue).place(x=xx, y=40+29*4)
-
-    ___['text'] = "------------------------------------------------------------------------------------------------------------------------------------------>",
-    ___.place(y=240, x=320)
 
 def fourthStep():
     global bobSendButton
     global bobSendValue
-    global ___
 
     aliceSendButton.place_forget()
     aliceSendValue.set("")
@@ -876,7 +835,7 @@ def fourthStep():
     alicePublicKeyValue.set(alicePublicKey)
     alicePrivateKeyValue.set(alicePrivateKey)
     alicePublicKeyinTrentValue.set(alicePublicKey)
-    aliceRandomValueValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
+    aliceRandomValueValue.set(aliceRandomValue)
 
     bobPublicKeyValue.set(bobPublicKey)
     bobPrivateKeyValue.set(bobPrivateKey)
@@ -888,10 +847,7 @@ def fourthStep():
     trentPublicKeyinAliceValue.set(trentPublicKey)
     trentPublicKeyinBobValue.set(trentPublicKey)
 
-    whatToDo['text'] = "Крок 4"
-
-    ___['text'] = "<----------------------------------------------"
-    ___.place(y=240, x=870)
+    whatToDo['text'] = "ЕТАП №4\n\nБоб відправляє Тренту свій і Аліси ідентифікатор\nТа випадкове число Аліси, зашифроване:\nВідкритим ключем Трента"
 
 
     bobSendLable = makeEntry(bobSendValue, 29).place(relx=1, y=5+3, x=-5-74, rely=0, anchor=tk.NE)
@@ -901,15 +857,14 @@ def fourthStep():
 
 
 def fifthStep():
-    global ___
     bobSendButton.place_forget()
     bobSendValue.set("")
 
     alicePublicKeyValue.set(alicePublicKey)
     alicePrivateKeyValue.set(alicePrivateKey)
     alicePublicKeyinTrentValue.set(alicePublicKey)
-    aliceRandomValueValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
-    aliceRandomValueinBobValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
+    aliceRandomValueValue.set(aliceRandomValue)
+    aliceRandomValueinBobValue.set(aliceRandomValueinBob)
 
     bobPublicKeyValue.set(bobPublicKey)
     bobPrivateKeyValue.set(bobPrivateKey)
@@ -924,12 +879,10 @@ def fifthStep():
     trentSendValue.set(bobSendToTrent)
     trentSendButton['text'] = "Decrypt with Trent's PrKey"
     trentSendButton['command'] = trentFifthStepDecryptClick
-    trentSendButton.place(relx=0.5, y=5, x=-154+395, anchor=tk.N)
+    trentSendButton.place(relx=0.5, y=-(40+29*5)-10+1, x=-154+315, rely=1, anchor=tk.W)
 
-    whatToDo['text'] = "Крок 5"
+    whatToDo['text'] = "ЕТАП №5\nТрент відправляє Бобу два повідомлення\nПерше: Відкритий ключ Аліси\nПідписаний відкритим ключем Трента\nДруге: Випадкове число Аліси,Сеансовий ключ\nПідписуються Трентом\nта шифруються ключем Боба"
 
-    ___['text'] = "---------------------------------------------->"
-    ___.place(y=240, x=870)
 
 
 def sixthStep():
@@ -939,9 +892,9 @@ def sixthStep():
     alicePublicKeyValue.set(alicePublicKey)
     alicePrivateKeyValue.set(alicePrivateKey)
     alicePublicKeyinTrentValue.set(alicePublicKey)
-    aliceRandomValueValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
-    aliceRandomValueinBobValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
-    aliceRandomValueinTrentValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
+    aliceRandomValueValue.set(aliceRandomValue)
+    aliceRandomValueinBobValue.set(aliceRandomValueinBob)
+    aliceRandomValueinTrentValue.set(aliceRandomValueinTrent)
 
     bobPublicKeyValue.set(bobPublicKey)
     bobPrivateKeyValue.set(bobPrivateKey)
@@ -959,11 +912,7 @@ def sixthStep():
     bobSendButton['command'] = bobsixthStepVerifyClick
     bobSendButton.place(relx=1, y=5-1, x=-5-315, rely=0, anchor=tk.NE)
 
-    whatToDo['text'] =  "Крок 6"
-
-    global ___
-    ___['text'] = "<------------------------------------------------------------------------------------------------------------------------------------------",
-    ___.place(y=240, x=320)
+    whatToDo['text'] =  "ЕТАП №6\nБоб перевіряє підписи повідомлень\nДалі посилає Алісі друге повідомлення Трента\nдоповнивши його своїм випадковим числом\nі зашифрувавши відкритим ключем Аліси"
 
 def seventhStep():
     bobSendButton.place_forget()
@@ -973,15 +922,15 @@ def seventhStep():
     alicePrivateKeyValue.set(alicePrivateKey)
     alicePublicKeyinTrentValue.set(alicePublicKey)
     alicePublicKeyinBobValue.set(alicePublicKeyinBob)
-    aliceRandomValueValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
-    aliceRandomValueinBobValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
-    aliceRandomValueinTrentValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
+    aliceRandomValueValue.set(aliceRandomValue)
+    aliceRandomValueinBobValue.set(aliceRandomValueinBob)
+    aliceRandomValueinTrentValue.set(aliceRandomValueinTrent)
 
     bobPublicKeyValue.set(bobPublicKey)
     bobPrivateKeyValue.set(bobPrivateKey)
     bobPublicKeyinAliceValue.set(bobPublicKeyinAlice)
     bobPublicKeyinTrentValue.set(bobPublicKey)
-    bobRandomValueValue.set(datetime.datetime(int(str(bobRandomValue)[0:4]), int(str(bobRandomValue)[4:6]), int(str(bobRandomValue)[6:8]), int(str(bobRandomValue)[8:10]), int(str(bobRandomValue)[10:12]), int(str(bobRandomValue)[12:14])))
+    bobRandomValueValue.set(bobRandomValue)
     sessionKeyBobValue.set(sessionKeyBob)
 
     trentPublicKeyValue.set(trentPublicKey)
@@ -995,34 +944,28 @@ def seventhStep():
     aliceSendButton['command'] = bobseventhStepVerifyClick
     aliceSendButton.place(x=5+315, y=5-1)
 
-    whatToDo['text'] =  "Крок 7"
-
-    global ___
-    ___['text'] = "------------------------------------------------------------------------------------------------------------------------------------------>",
-    ___.place(y=240, x=320)
+    whatToDo['text'] =  "ЕТАП №7\nАліса перевіряє підпис Трента\nі збіг свого випадкового числа\nПотім надсилає Бобу його випадкове число\nзашифрувавши його сеансовим ключем"
 
 def finalStep():
     aliceSendValue.set("")
     aliceSendButton.place_forget()
-    ___.place_forget()
-    whatToDo.place_forget()
 
     alicePublicKeyValue.set(alicePublicKey)
     alicePrivateKeyValue.set(alicePrivateKey)
     alicePublicKeyinTrentValue.set(alicePublicKey)
     alicePublicKeyinBobValue.set(alicePublicKeyinBob)
-    aliceRandomValueValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
-    aliceRandomValueinBobValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
-    aliceRandomValueinTrentValue.set(datetime.datetime(int(str(aliceRandomValue)[0:4]), int(str(aliceRandomValue)[4:6]), int(str(aliceRandomValue)[6:8]), int(str(aliceRandomValue)[8:10]), int(str(aliceRandomValue)[10:12]), int(str(aliceRandomValue)[12:14])))
+    aliceRandomValueValue.set(aliceRandomValue)
+    aliceRandomValueinBobValue.set(aliceRandomValueinBob)
+    aliceRandomValueinTrentValue.set(aliceRandomValueinTrent)
     sessionKeyAliceValue.set(sessionKeyAlice)
 
     bobPublicKeyValue.set(bobPublicKey)
     bobPrivateKeyValue.set(bobPrivateKey)
     bobPublicKeyinTrentValue.set(bobPublicKey)
-    bobRandomValueValue.set(datetime.datetime(int(str(bobRandomValue)[0:4]), int(str(bobRandomValue)[4:6]), int(str(bobRandomValue)[6:8]), int(str(bobRandomValue)[8:10]), int(str(bobRandomValue)[10:12]), int(str(bobRandomValue)[12:14])))
+    bobRandomValueValue.set(bobRandomValue)
     bobPublicKeyinAliceValue.set(bobPublicKeyinAlice)
     sessionKeyBobValue.set(sessionKeyBob)
-    bobRandomValueinAliceValue.set(datetime.datetime(int(str(bobRandomValue)[0:4]), int(str(bobRandomValue)[4:6]), int(str(bobRandomValue)[6:8]), int(str(bobRandomValue)[8:10]), int(str(bobRandomValue)[10:12]), int(str(bobRandomValue)[12:14])))
+    bobRandomValueinAliceValue.set(bobRandomValueinAlice)
 
     trentPublicKeyValue.set(trentPublicKey)
     trentPrivateKeyValue.set(trentPrivateKey)
@@ -1035,7 +978,7 @@ def finalStep():
     bobSendButton['command'] = bobFinalStepDecryptClick
     bobSendButton.place(relx=1, y=5-1, x=-5-315, rely=0, anchor=tk.NE)
 
-    # whatToDo['text'] =  "Кінець"
+    whatToDo['text'] =  "ЕТАП №8\n\nБоб розшифровує число\nі впевнюється, що воно не змінилось"
 
 def tryAgain():
     global click3gen
@@ -1068,35 +1011,6 @@ def tryAgain():
 
     click3gen = 0
     startGen()
-
-alicePublicKeyinTrentText = makeLabel("Alice Public key").place(relx=0.5, y=40+29*2, x=-110, anchor=tk.N)
-alicePublicKeyinTrentLable = makeEntry(alicePublicKeyinTrentValue).place(relx=0.5, y=40+29*2, x=xx+6-110, anchor=tk.N)
-bobPublicKeyinTrentText = makeLabel("Bob's Public key").place(relx=0.5, y=40+29*3, x=-110, anchor=tk.N)
-bobPublicKeyinTrentLable = makeEntry(bobPublicKeyinTrentValue).place(relx=0.5, y=40+29*3, x=xx+6-110, anchor=tk.N)
-bobPublicKeyinAliceText = makeLabel("Bob's Public key").place(x=5, y=40+29*3)
-bobPublicKeyinAliceLable = makeEntry(bobPublicKeyinAliceValue).place(x=xx, y=40+29*3)
-trentPublicKeyinAliceText = makeLabel("Trent Public key").place(x=5, y=40+29*2)
-trentPublicKeyinAliceLable = makeEntry(trentPublicKeyinAliceValue).place(x=xx, y=40+29*2)
-trentPublicKeyinBobText = makeLabel("Trent Public key").place(relx=1, y=40+29*2, x=-5, rely=0, anchor=tk.NE)
-trentPublicKeyinBobLable = makeEntry(trentPublicKeyinBobValue).place(relx=1, y=40+29*2, x=-xx, rely=0, anchor=tk.NE)
-aliceRandomValueText = makeLabel("Alice Time value").place(x=5, y=40+29*4)
-aliceRandomValueLable = makeEntry(aliceRandomValueValue).place(x=xx, y=40+29*4)
-aliceRandomValueinBobText = makeLabel("Alice Time value").place(relx=1, y=40+29*4, x=-5, rely=0, anchor=tk.NE)
-aliceRandomValueinBobLable = makeEntry(aliceRandomValueinBobValue).place(relx=1, y=40+29*4, x=-xx, rely=0, anchor=tk.NE)
-aliceRandomValueinTrentText = makeLabel("Alice Time value").place(relx=0.5, y=40+29*4, x=-110, anchor=tk.N)
-aliceRandomValueinTrentLable = makeEntry(aliceRandomValueinTrentValue).place(relx=0.5, y=40+29*4, x=xx+6-110, anchor=tk.N)
-sessionKey = makeLabel("Session Key").place(relx=0.5, y=40+29*5, x=-110, anchor=tk.N)
-sessionKeyLable = makeEntry(sessionKeyinTrentValue).place(relx=0.5, y=40+29*5, x=xx+6-110, anchor=tk.N)
-alicePublicKeyinBobText = makeLabel("Alice Public key").place(relx=1, y=40+29*3, x=-5, rely=0, anchor=tk.NE)
-alicePublicKeyinBobLable = makeEntry(alicePublicKeyinBobValue).place(relx=1, y=40+29*3, x=-xx, rely=0, anchor=tk.NE)
-sessionKeyBob1 = makeLabel("Session Key").place(relx=1, y=40+29*6, x=-5, rely=0, anchor=tk.NE)
-sessionKeyBobLable = makeEntry(sessionKeyBobValue).place(relx=1, y=40+29*6, x=-xx, rely=0, anchor=tk.NE)
-bobRandomValueinAliceText = makeLabel("Bob Time value").place(x=5, y=40+29*5)
-bobRandomValueinAliceLable = makeEntry(bobRandomValueinAliceValue).place(x=xx, y=40+29*5)
-sessionKeyAlice = makeLabel("Session Key").place(x=5, y=40+29*6)
-sessionKeyAliceLable = makeEntry(sessionKeyAliceValue).place(x=xx, y=40+29*6)
-bobRandomValueText = makeLabel("Bob Time value").place(relx=1, y=40+29*5, x=-5, rely=0, anchor=tk.NE) 
-bobRandomValueLable = makeEntry(bobRandomValueValue).place(relx=1, y=40+29*5, x=-xx, rely=0, anchor=tk.NE)
 
 startGen()
 
